@@ -1,27 +1,25 @@
 #include <string>
 #include <vector>
-#include <algorithm>
+
 using namespace std;
 
 string solution(string s, string skip, int index) {
     string answer = "";
-    
-    vector<int> alphabet(26, 0);
-    for(char c : skip){
-        alphabet[c-'a'] = 1;
-    }
-    
-    for(int i = 0; i < s.size(); i++){
-        int start = s[i] - 'a';
-        int count = index;
-        while(count > 0){
-            start = (start+1)%26;
-            if(alphabet[start] == 1){
-                count++;
+
+    for(auto v : s)
+    {
+        int t = 0;
+        int c = v - 'a';
+        while(t < index)
+        {
+            c++;
+            v = (c % 26) + 'a';
+            if(skip.find(v) == string::npos)
+            {
+                t++;
             }
-            count--;
         }
-        answer+= (start%26) + 'a';
+        answer += v;
     }
     return answer;
 }
