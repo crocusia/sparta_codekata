@@ -1,0 +1,18 @@
+-- 코드를 입력하세요
+WITH RECURSIVE temp as (
+    (SELECT 0 HOUR)
+    UNION
+    (SELECT HOUR+1 FROM temp WHERE HOUR < 23)
+)
+
+SELECT 
+  temp.HOUR, 
+  IFNULL(ao.COUNT, 0) AS COUNT
+FROM temp LEFT OUTER JOIN (
+    SELECT 
+      HOUR(DATETIME) AS HOUR, 
+      COUNT(*) AS COUNT
+    FROM ANIMAL_OUTS
+    GROUP BY HOUR
+    ORDER BY HOUR) AS ao
+ON temp.HOUR = ao.HOUR;
