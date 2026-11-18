@@ -2,13 +2,12 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.io.FileInputStream;
 import java.util.*;
-import java.math.*;
 
 class Solution
 {	
 	static int[] scores = new int[100];
-	static Set<Integer> c = new HashSet<>();
-	
+	static boolean[] reach = new boolean[10001];
+    
 	public static void main(String args[]) throws Exception
 	{
 		//System.setIn(new FileInputStream("res/input.txt"));
@@ -30,29 +29,25 @@ class Solution
 				scores[i] = sc.nextInt();
 			}
 			
-			int[][] dp = new int[n+1][10001];
-			for(int[] row : dp) {
-				Arrays.fill(row, -1);
-			}
-			dp[0][0] = 0;
-			c.clear();
-			
-			c.add(0);
-			
+            for(int i = 0; i <= 10000; i++){
+            	reach[i] = false;
+            }
+            reach[0] = true; 
+			int maxSum = 0;
+            
 			for(int i = 0; i < n; i++) {
-				for(int j = 0; j <= 10000; j++) {
-					if(dp[i][j] == -1) continue;
-					
-					int now = dp[i][j];
-					dp[i+1][j] = Math.max(dp[i+1][j], now);
-					
-					int next = now+scores[i];
-					dp[i+1][next] = Math.max(dp[i+1][next], next);
-					c.add(next);
+				for(int j = maxSum; j >= 0; j--) {
+					if(!reach[j]) continue;
+					reach[j+scores[i]] = true;
 				}
+                maxSum += scores[i];
 			}
 			
-			System.out.println("#"+test_case+" "+c.size());
+            int count = 0;
+            for(int i = 0; i <= maxSum; i++){
+            	if(reach[i]) count++;
+            }
+			System.out.println("#"+test_case+" "+count);
 		}
 	}
 }
